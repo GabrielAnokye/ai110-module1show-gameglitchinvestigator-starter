@@ -53,18 +53,42 @@ Describe your fixed game in numbered steps so a reader can follow along without 
 ![alt text](image.png)
 
 ## 🧪 Test Results
-![alt text](image-1.png)
+
+Two suites run from the project root with `python -m pytest`:
+
+- `tests/test_game_logic.py` — 42 cases covering the three logic bugs found in Phase 1
+  (backwards hints, swapped Normal/Hard ranges, parity-flipping score penalty).
+- `tests/test_edge_cases.py` — 76 cases added for Stretch Challenge 1, probing the
+  boundaries of `parse_guess` and `update_score`.
+
 ```
-======================================================================================= test session starts ========================================================================================
+======================================= test session starts ========================================
 platform darwin -- Python 3.14.7, pytest-9.1.1, pluggy-1.6.0
 rootdir: /Users/gabrielanokye/AI Engineer/ai110-module1show-gameglitchinvestigator-starter
 plugins: anyio-4.15.1
-collected 42 items                                                                                                                                                                                 
+collected 118 items
 
-tests/test_game_logic.py ..........................................                                                                                                                          [100%]
+tests/test_edge_cases.py ......................................................x............ [ 56%]
+.........                                                                                    [ 64%]
+tests/test_game_logic.py ..........................................                          [100%]
 
-======================================================================================== 42 passed in 0.03s ========================================================================================
+===================================== short test summary info ======================================
+XFAIL tests/test_edge_cases.py::test_negative_attempt_number_should_not_inflate_the_award - KNOWN GAP: attempt_number is never validated, so a negative attempt inflates the win award above the first-attempt maximum.
+================================== 117 passed, 1 xfailed in 0.07s ==================================
 ```
+
+### About the one `xfail`
+
+That single `x` is not a failure and does not break the build — it is a deliberate
+marker for a gap the edge-case tests uncovered. `update_score` never validates
+`attempt_number`, so a negative attempt inflates the win award:
+`update_score(0, "Win", -5)` returns **140**, which beats the 90-point first-attempt
+maximum. The case is not reachable from the current UI (the attempt counter only ever
+goes up), so the game logic was left alone. The test is marked `strict=True`, which
+means it will convert into a hard failure the moment a guard is added — the fix cannot
+be forgotten.
+
+![alt text](image-1.png)
 
 
 ## 🚀 Stretch Features
