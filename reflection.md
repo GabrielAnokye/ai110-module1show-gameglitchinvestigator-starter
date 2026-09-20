@@ -8,11 +8,11 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - List at least two concrete bugs you noticed at the start  
   (for example: "the hints were backwards").
 
-The hints are interchange that is hints says "Go Lower" when the actual number is higher and vice versa.
-The start new game key doesn't work when you are out of guesses or secret is found unless page is refreshed but starts a new game when you have some guess left
-When you type an answer in the box you are been prompted to press "enter" key to guess but it doesn't submit
-New game only refreshes guess count but does not clear the guess input box
-After guessing the right number, final score shows incorrectly
+1. The hints are interchange that is hints says "Go Lower" when the actual number is higher and vice versa.
+2. The start new game key doesn't work when you are out of guesses or secret is found unless page is refreshed but starts a new game when you have some guess left
+3. When you type an answer in the box you are been prompted to press "enter" key to guess but it doesn't submit
+4. New game only refreshes guess count but does not clear the guess input box
+5. After guessing the right number, final score shows incorrectly
 
 **Bug Reproduction Log**
 
@@ -21,7 +21,7 @@ Document at least 3 bugs you found. Add rows as needed.
 | Input | Expected Behavior | Actual Behavior | Console Output / Error |
 |-------|-------------------|-----------------|------------------------|
 | 34    |Go LOWER           |Go HIGHER        |none                    |
-|New Game|Clear guess box/32|Empty            |none
+|New Game|Game reset and guess input cleared|Guess count resets, but previous guess remains|none
 |(12)Score deduction| - 5       |-15          |none
 
 ---
@@ -29,10 +29,11 @@ Document at least 3 bugs you found. Add rows as needed.
 ## 2. How did you use AI as a teammate?
 
 - Which AI tools did you use on this project (for example: ChatGPT, Gemini, Copilot)?
-Claude Code
+Claude Code, Copilot
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
 It suggest I interchange the condition statements for "Go HIGHER" and "Go LOWER"
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
+
 
 
 ---
@@ -40,9 +41,12 @@ It suggest I interchange the condition statements for "Go HIGHER" and "Go LOWER"
 ## 3. Debugging and testing your fixes
 
 - How did you decide whether a bug was really fixed?
+I generated tests in test_game_logic.py and run pytest, I manually also run the app and verified. it was correct
 - Describe at least one test you ran (manual or using pytest)  
   and what it showed you about your code.
+  I typed 20 and it return GO LOWER so I typed 15 and it says GO HIGHER and 13 and it says YOU WIN
 - Did AI help you design or understand any tests? How?
+  Yes, it did actually gave the test cases which upon verification took care of all edge cases.
 
 ---
 
