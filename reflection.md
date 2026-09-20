@@ -56,12 +56,16 @@ I generated tests in test_game_logic.py and run pytest, I manually also run the 
 ## 4. What did you learn about Streamlit and state?
 
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
-
+When a user press a button or check a box, the app forget everything and executes the entire Python scripts from line 1 all over again
 ---
 
 ## 5. Looking ahead: your developer habits
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
+I want to continue to refactor logics from the main big class so it's easily read and maintained
   - This could be a testing habit, a prompting strategy, or a way you used Git.
+  Also I would commit each step in the process so I always have a backup
 - What is one thing you would do differently next time you work with AI on a coding task?
+Next time I will be more skeptical about accepting AI changes as it hallucinates for example when it things hard difficulty should range 1-200 instead of 1-100
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+It can generate code per the instructions given but might hallucinate on where instruction are not clearer so it's always good to review before accepting.
