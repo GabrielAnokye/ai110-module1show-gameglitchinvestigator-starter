@@ -13,6 +13,7 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 3. When you type an answer in the box you are been prompted to press "enter" key to guess but it doesn't submit
 4. New game only refreshes guess count but does not clear the guess input box
 5. After guessing the right number, final score shows incorrectly
+6. The difficulty range should be easy(1-20), medium(1-50), hard(1-100) instead medium and hard are interchanged
 
 **Bug Reproduction Log**
 
@@ -23,6 +24,7 @@ Document at least 3 bugs you found. Add rows as needed.
 | 34    |Go LOWER           |Go HIGHER        |none                    |
 |New Game|Game reset and guess input cleared|Guess count resets, but previous guess remains|none
 |(12)Score deduction| - 5       |-15          |none
+|Difficulty medium    |1-50         |1-100    |none
 
 ---
 
@@ -33,6 +35,7 @@ Claude Code, Copilot
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
 It suggest I interchange the condition statements for "Go HIGHER" and "Go LOWER"
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
+It suggested since Mediumm difficulty range was 1-100, then hard difficulty should be 1-200 even though medium and hard difficulty ranges were just interchanged.
 
 
 
