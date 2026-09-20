@@ -93,4 +93,75 @@ be forgotten.
 
 ## 🚀 Stretch Features
 
-- [ ] [If you choose to complete Challenge 4, describe the Enhanced UI changes here — a screenshot is optional]
+### Challenge 1 — Advanced Edge-Case Testing
+
+See the **Test Results** section above and `ai_interactions.md`.
+
+### Challenge 4 — Enhanced Game UI
+
+Three changes to `app.py`. None of them touch `logic_utils.py`, so all 118 tests still
+pass unchanged.
+
+**1. Structured history entries** — inside the `if submit:` block.
+
+`st.session_state.history` used to hold bare values (an int for a valid guess, the raw
+string for an invalid one). Each entry is now a dictionary:
+
+```python
+{
+    "Attempt": st.session_state.attempts,
+    "Guess": guess_int,
+    "Result": outcome,
+    "Score": st.session_state.score,
+}
+```
+
+The append moved to *after* the `update_score()` call, so the `Score` column shows the
+running total as it stood at the end of that attempt rather than before it. Unparseable
+input is logged too, with the raw text as `Guess` and `"Invalid"` as `Result`, so a
+failed attempt still shows up in the log it consumed an attempt for.
+
+**2. `📊 Game History` sidebar table** — the `render_history()` function, defined at the
+top of `app.py`.
+
+Renders `st.session_state.history` with `st.dataframe(..., hide_index=True)`, followed by
+a running-score caption. Two details worth noting:
+
+- The table is written into a `st.sidebar.container()` (`history_panel`) reserved
+  directly under the difficulty settings, but *filled in at the bottom of the script*.
+  Streamlit runs top to bottom, so rendering it where it visually sits would have shown
+  the table as it was **before** the current guess was scored — always one guess behind.
+  The container keeps the position while letting the data be current.
+- `render_history()` is also called just before the `st.stop()` on the game-over branch,
+  so the log stays visible after a win or a loss instead of vanishing.
+- The `Guess` column is cast to `str` for display only. It can legitimately hold an int
+  or a raw string, and Arrow raises `ArrowInvalid` on a mixed-type column.
+  `st.session_state.history` keeps the original values.
+
+**3. Hot/Cold colour-coded hints** — replaces the single `st.warning(message)` call.
+
+| Outcome | Call | Rendered as |
+|---------|------|-------------|
+| `Too High` | `st.error("🔥 " + message)` | Red callout, 🔥 icon, "📉 Go LOWER!" |
+| `Too Low` | `st.info("❄️ " + message)` | Blue callout, ❄️ icon, "📈 Go HIGHER!" |
+| `Win` | `st.success(message)` | Green callout, "🎉 Correct!" |
+
+Streamlit pulls a leading emoji out of an alert string and uses it as the callout's icon,
+so 🔥 and ❄️ appear in the icon slot rather than inline in the text. The hint text and the
+`outcome` value itself are unchanged — only the callout style differs — and the whole
+block still respects the existing **Show hint** checkbox.
+
+**One related fix:** the `New Game` button now also clears `st.session_state.history`.
+Without it the new table would keep showing the previous game's guesses.
+
+> **Still outstanding (pre-existing, not introduced here):** `New Game` does not reset
+> `status` or `score`, so after a win or a loss it still lands on "You already won."
+> That is bug #2 from the list above and is unrelated to these UI changes.
+>
+> The `Attempt` column also starts at **2**, not 1: `attempts` is initialised to `1` and
+> then incremented at the top of the `if submit:` block, before the guess is scored. The
+> counter has always behaved this way — the new table just makes it visible.
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
